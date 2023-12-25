@@ -1,6 +1,27 @@
 #include "../include/mlLib.h"
 
-namespace mlLib
+namespace vecAlg
+{
+    template <typename T>
+    std::vector<T> vectorAdd(const std::vector<T> &vectorA, const std::vector<T> &vectorB)
+    {
+        assert(("Vector 1 is empty" && !vectorA.empty()) &&
+               ("Vector 2 is empty" && !VectorB.empty()) &&
+               ("Vector dimensions do not match" && vectorA.size() == vectorB.size()));
+
+        size_t vecLen = vectorA.size();
+        std::vector<T> result(vecLen, 0);
+
+        for (size_t i = 0; i < vecLen; i++)
+        {
+            result[i] = vectorA[i] + vectorB[i];
+        }
+
+        return result;
+    }
+}
+
+namespace matAlg
 {
     template <typename T>
     std::vector<std::vector<T>> matrixTranspose(const std::vector<std::vector<T>> &matrixA)
