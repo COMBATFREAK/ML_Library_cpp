@@ -1,5 +1,7 @@
 g++ -c src/mlLib.cpp -o build/mlLib.o
-
 ar rcs lib/mlLib.a build/mlLib.o
 
-g++ examples/main.cpp -Iinclude/ -Llib/ -l:mlLib.a -o t1
+g++ examples/VectorAlgebra.cpp -Iinclude/ -Llib/ -l:mlLib.a -o t1
+g++ examples/MatrixAlgebra.cpp -Iinclude/ -Llib/ -l:mlLib.a -o t2
+g++ examples/LinearRegressionLeastSquares.cpp -Iinclude/ -Llib/ -l:mlLib.a -o t3
+g++ examples/LinearRegressionGradientDescent.cpp -Iinclude/ -Llib/ -l:mlLib.a -o t4
