@@ -4,6 +4,7 @@
 #include <sstream>
 #include <vector>
 #include <string>
+#include <iomanip>
 
 // Function to split a string into tokens based on a delimiter
 std::vector<std::string> split(const std::string &s, char delimiter)
@@ -64,7 +65,7 @@ int main()
     }
 
     const size_t vectorSize = yValues.size();
-    const int trainingSize = static_cast<int>(vectorSize * 0.8);
+    const int trainingSize = static_cast<int>(vectorSize * 0.5);
 
     std::vector<std::vector<double>> xTrain(xValues.begin(), xValues.begin() + trainingSize);
     std::vector<std::vector<double>> xTest(xValues.begin() + trainingSize, xValues.end());
@@ -72,13 +73,30 @@ int main()
     std::vector<double> yTrain(yValues.begin(), yValues.begin() + trainingSize);
     std::vector<double> yTest(yValues.begin() + trainingSize, yValues.end());
 
-    mlLib::LogisticRegressionModel model = mlLib::LogisticRegression(xTrain, yTrain);
+    mlLib::LogisticRegressionModel model = mlLib::LogisticRegression(xTrain, yTrain,0.0005,100000);
 
-    std::vector<int> predictedYValues = model.predict(xTest);
+    std::vector<int> predictedYValues = model.predict(xTest,0.9);
 
     const long double Accuracy = model.evaluate(yTest, predictedYValues);
 
     std::cout << "Accuracy = " << Accuracy << "%\n";
+
+    mlLib::ConfusionMatrix confusionMatrix = model.getConfusionMatrix();
+    mlLib::EvaluationMetrics evaluationMetrics = model.getEvaluationMetrics();
+
+    // Print confusion matrix
+    std::cout << "Confusion Matrix:\n";
+    std::cout << std::setw(15) << "True Positive: " << confusionMatrix.truePositive << "\n";
+    std::cout << std::setw(15) << "True Negative: " << confusionMatrix.trueNegative << "\n";
+    std::cout << std::setw(15) << "False Positive: " << confusionMatrix.falsePositive << "\n";
+    std::cout << std::setw(15) << "False Negative: " << confusionMatrix.falseNegative << "\n\n";
+
+    // Print evaluation metrics
+    std::cout << "Evaluation Metrics:\n";
+    std::cout << std::setw(15) << "Accuracy: " << evaluationMetrics.accuracy << "%\n";
+    std::cout << std::setw(15) << "Recall: " << evaluationMetrics.recall << "%\n";
+    std::cout << std::setw(15) << "Precision: " << evaluationMetrics.precision << "%\n";
+    std::cout << std::setw(15) << "F1 Score: " << evaluationMetrics.f1Score << "\n";
 
     // Close the file
     file.close();

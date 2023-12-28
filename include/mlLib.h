@@ -116,6 +116,22 @@ namespace matAlg
 namespace mlLib
 {
 
+    struct ConfusionMatrix
+    {
+        size_t truePositive = 0;
+        size_t trueNegative = 0;
+        size_t falsePositive = 0;
+        size_t falseNegative = 0;
+    };
+
+    struct EvaluationMetrics
+    {
+        long double accuracy = 0;
+        long double recall = 0;
+        long double precision = 0;
+        long double f1Score = 0;
+    };
+
     class LinearRegressionModel
     {
     private:
@@ -157,6 +173,8 @@ namespace mlLib
     private:
         std::vector<long double> coefficients;
         stat::NormalizationType normalizationType;
+        ConfusionMatrix confusionMatrix;
+        EvaluationMetrics evaluationMetrics;
 
     public:
         // Constructors
@@ -166,8 +184,16 @@ namespace mlLib
         // Getter function
         const std::vector<long double> &getCoefficients() const;
 
+        ConfusionMatrix getConfusionMatrix() const;
+
+        EvaluationMetrics getEvaluationMetrics() const;
+
         // Setter function
         void setCoefficients(const std::vector<long double> &newCoefficients);
+
+        void setConfusionMatrix(const ConfusionMatrix &matrix);
+
+        void setEvaluationMetrics(const EvaluationMetrics &metrics);
 
         template <typename T>
         std::vector<int> predict(const std::vector<std::vector<T>> &xValues, const long double threshold = 0.5);

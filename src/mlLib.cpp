@@ -787,8 +787,17 @@ namespace mlLib
     // Getter function
     const std::vector<long double> &LogisticRegressionModel::getCoefficients() const { return coefficients; }
 
+    ConfusionMatrix LogisticRegressionModel::getConfusionMatrix() const { return confusionMatrix; }
+
+    // Getter and Setter for Evaluation Metrics
+    EvaluationMetrics LogisticRegressionModel::getEvaluationMetrics() const { return evaluationMetrics; }
+
     // Setter function
     void LogisticRegressionModel::setCoefficients(const std::vector<long double> &newCoefficients) { coefficients = newCoefficients; }
+
+    void LogisticRegressionModel::setConfusionMatrix(const ConfusionMatrix &matrix) { confusionMatrix = matrix; }
+
+    void LogisticRegressionModel::setEvaluationMetrics(const EvaluationMetrics &metrics) { evaluationMetrics = metrics; }
 
     template <typename T>
     std::vector<int> LogisticRegressionModel::predict(const std::vector<std::vector<T>> &xValues, const long double threshold)
@@ -837,19 +846,42 @@ namespace mlLib
         assert(("Input vectors must have the same size" && actualYValues.size() == predictedClasses.size()));
 
         size_t dataSize = actualYValues.size();
-        size_t correctPredictions = 0;
+        ConfusionMatrix newConfusionMatrix = {0, 0, 0, 0}; // Initialize to zeros
 
         for (size_t i = 0; i < dataSize; ++i)
         {
             int predictedClass = predictedClasses[i];
             int actualValue = actualYValues[i];
 
-            if ((predictedClass == 1 && actualValue == 1) || (predictedClass == 0 && actualValue == 0))
+            if (predictedClass == 1 && actualValue == 1)
             {
-                correctPredictions++;
+                newConfusionMatrix.truePositive++;
+            }
+            else if (predictedClass == 0 && actualValue == 0)
+            {
+                newConfusionMatrix.trueNegative++;
+            }
+            else if (predictedClass == 1 && actualValue == 0)
+            {
+                newConfusionMatrix.falsePositive++;
+            }
+            else if (predictedClass == 0 && actualValue == 1)
+            {
+                newConfusionMatrix.falseNegative++;
             }
         }
 
+        setConfusionMatrix(newConfusionMatrix);
+
+        long double accuracy = static_cast<long double>(newConfusionMatrix.truePositive + newConfusionMatrix.trueNegative) / dataSize * 100.0;
+        long double recall = static_cast<long double>(newConfusionMatrix.truePositive) / (newConfusionMatrix.truePositive + newConfusionMatrix.falseNegative) * 100.0;
+        long double precision = static_cast<long double>(newConfusionMatrix.truePositive) / (newConfusionMatrix.truePositive + newConfusionMatrix.falsePositive) * 100.0;
+        long double f1Score = 2 * precision * recall / (precision + recall);
+
+        // Set the evaluation metrics
+        setEvaluationMetrics({accuracy, recall, precision, f1Score});
+
+        size_t correctPredictions = newConfusionMatrix.truePositive + newConfusionMatrix.trueNegative;
         return static_cast<long double>(correctPredictions) / dataSize * 100.0;
     }
 
