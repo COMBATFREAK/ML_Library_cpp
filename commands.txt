@@ -1,7 +1,11 @@
-g++ -c src/mlLib.cpp -o build/mlLib.o
+g++ -c src/mlLib.cpp -o build/mlLib.o 
 ar rcs lib/mlLib.a build/mlLib.o
 
-g++ examples/VectorAlgebra.cpp -Iinclude/ -Llib/ -l:mlLib.a -o t1
-g++ examples/MatrixAlgebra.cpp -Iinclude/ -Llib/ -l:mlLib.a -o t2
-g++ examples/LinearRegressionLeastSquares.cpp -Iinclude/ -Llib/ -l:mlLib.a -o t3
-g++ examples/LinearRegressionGradientDescent.cpp -Iinclude/ -Llib/ -l:mlLib.a -o t4
+
+g++ examples/Code/VectorAlgebra.cpp -Iinclude/ -Llib/ -l:mlLib.a -o examples/Exe/t1
+g++ examples/Code/MatrixAlgebra.cpp -Iinclude/ -Llib/ -l:mlLib.a -o examples/Exe/t2
+g++ examples/Code/LinearRegressionLeastSquares.cpp -Iinclude/ -Llib/ -l:mlLib.a -o examples/Exe/t3
+g++ examples/Code/LinearRegressionGradientDescent.cpp -Iinclude/ -Llib/ -l:mlLib.a -o examples/Exe/t4
+g++ examples/Code/LogisticRegression.cpp -Iinclude/ -Llib/ -l:mlLib.a -o examples/Exe/t5
+g++ examples/Code/Probability.cpp -Iinclude/ -Llib/ -l:mlLib.a -o examples/Exe/t6
+

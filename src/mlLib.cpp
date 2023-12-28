@@ -1,5 +1,52 @@
 #include "../include/mlLib.h"
 
+namespace prob
+{
+
+    double factorial(int n)
+    {
+        if (n == 0 || n == 1)
+            return 1;
+
+        double result = 1;
+        for (int i = 2; i <= n; ++i)
+        {
+            result *= i;
+        }
+
+        return result;
+    }
+
+    double combinations(int n, int k)
+    {
+        if (k > n)
+            return 0;
+        return prob::factorial(n) / (prob::factorial(k) * prob::factorial(n - k));
+    }
+
+    double permutations(int n, int k)
+    {
+        if (k > n)
+            return 0;
+        return prob::factorial(n) / prob::factorial(n - k);
+    }
+
+    double binomialProbability(int n, int k, double p)
+    {
+        if (k > n || p < 0 || p > 1)
+            return 0.0;
+        return prob::combinations(n, k) * std::pow(p, k) * std::pow(1 - p, n - k);
+    }
+
+    double poissonProbability(int k, double lambda)
+    {
+        if (lambda < 0)
+            return 0.0;
+        return (std::exp(-lambda) * std::pow(lambda, k)) / prob::factorial(k);
+    }
+
+} // namespace probability
+
 namespace stat
 {
     template <typename T>
@@ -733,5 +780,147 @@ namespace mlLib
     template LinearRegressionModel LinearRegressionGradientDescent(const std::vector<float> &xValues, const std::vector<float> &yValues, stat::NormalizationType normalizationType, const long double learningRate, const int numIterations);
     template LinearRegressionModel LinearRegressionGradientDescent(const std::vector<double> &xValues, const std::vector<double> &yValues, stat::NormalizationType normalizationType, const long double learningRate, const int numIterations);
     template LinearRegressionModel LinearRegressionGradientDescent(const std::vector<long double> &xValues, const std::vector<long double> &yValues, stat::NormalizationType normalizationType, const long double learningRate, const int numIterations);
+
+    LogisticRegressionModel::LogisticRegressionModel() {}
+    LogisticRegressionModel::LogisticRegressionModel(const std::vector<long double> &coefficients) : coefficients(coefficients), normalizationType(stat::NormalizationType::Z_Score) {}
+
+    // Getter function
+    const std::vector<long double> &LogisticRegressionModel::getCoefficients() const { return coefficients; }
+
+    // Setter function
+    void LogisticRegressionModel::setCoefficients(const std::vector<long double> &newCoefficients) { coefficients = newCoefficients; }
+
+    template <typename T>
+    std::vector<int> LogisticRegressionModel::predict(const std::vector<std::vector<T>> &xValues, const long double threshold)
+    {
+        assert(!coefficients.empty() && "Model coefficients are not initialized.");
+
+        std::vector<int> predictions;
+        predictions.reserve(xValues.size());
+
+        for (size_t i = 0; i < xValues.size(); ++i)
+        {
+            const auto &xVector = xValues[i];
+            assert(xVector.size() == coefficients.size() - 1 && "Input feature size mismatch.");
+
+            long double logit = coefficients[0];
+            for (size_t j = 0; j < xVector.size(); ++j)
+            {
+                logit += coefficients[j + 1] * xVector[j];
+            }
+
+            const long double probability = 1.0 / (1.0 + std::exp(-logit));
+            const int predictedClass = (probability >= threshold) ? 1 : 0;
+            predictions.push_back(predictedClass);
+        }
+
+        return predictions;
+    }
+
+    template std::vector<int> LogisticRegressionModel::predict(const std::vector<std::vector<int8_t>> &xValues, long double threshold);
+    template std::vector<int> LogisticRegressionModel::predict(const std::vector<std::vector<int16_t>> &xValues, long double threshold);
+    template std::vector<int> LogisticRegressionModel::predict(const std::vector<std::vector<int32_t>> &xValues, long double threshold);
+    template std::vector<int> LogisticRegressionModel::predict(const std::vector<std::vector<int64_t>> &xValues, long double threshold);
+
+    template std::vector<int> LogisticRegressionModel::predict(const std::vector<std::vector<uint8_t>> &xValues, long double threshold);
+    template std::vector<int> LogisticRegressionModel::predict(const std::vector<std::vector<uint16_t>> &xValues, long double threshold);
+    template std::vector<int> LogisticRegressionModel::predict(const std::vector<std::vector<uint32_t>> &xValues, long double threshold);
+    template std::vector<int> LogisticRegressionModel::predict(const std::vector<std::vector<uint64_t>> &xValues, long double threshold);
+
+    template std::vector<int> LogisticRegressionModel::predict(const std::vector<std::vector<float>> &xValues, long double threshold);
+    template std::vector<int> LogisticRegressionModel::predict(const std::vector<std::vector<double>> &xValues, long double threshold);
+    template std::vector<int> LogisticRegressionModel::predict(const std::vector<std::vector<long double>> &xValues, long double threshold);
+
+    template <typename T>
+    long double LogisticRegressionModel::evaluate(const std::vector<T> &actualYValues, const std::vector<int> &predictedClasses)
+    {
+        assert(("Input vectors must have the same size" && actualYValues.size() == predictedClasses.size()));
+
+        size_t dataSize = actualYValues.size();
+        size_t correctPredictions = 0;
+
+        for (size_t i = 0; i < dataSize; ++i)
+        {
+            int predictedClass = predictedClasses[i];
+            int actualValue = actualYValues[i];
+
+            if ((predictedClass == 1 && actualValue == 1) || (predictedClass == 0 && actualValue == 0))
+            {
+                correctPredictions++;
+            }
+        }
+
+        return static_cast<long double>(correctPredictions) / dataSize * 100.0;
+    }
+
+    template long double mlLib::LogisticRegressionModel::evaluate<int8_t>(const std::vector<int8_t> &actualYValues, const std::vector<int> &predictedClasses);
+    template long double mlLib::LogisticRegressionModel::evaluate<int16_t>(const std::vector<int16_t> &actualYValues, const std::vector<int> &predictedClasses);
+    template long double mlLib::LogisticRegressionModel::evaluate<int32_t>(const std::vector<int32_t> &actualYValues, const std::vector<int> &predictedClasses);
+    template long double mlLib::LogisticRegressionModel::evaluate<int64_t>(const std::vector<int64_t> &actualYValues, const std::vector<int> &predictedClasses);
+
+    template long double mlLib::LogisticRegressionModel::evaluate<uint8_t>(const std::vector<uint8_t> &actualYValues, const std::vector<int> &predictedClasses);
+    template long double mlLib::LogisticRegressionModel::evaluate<uint16_t>(const std::vector<uint16_t> &actualYValues, const std::vector<int> &predictedClasses);
+    template long double mlLib::LogisticRegressionModel::evaluate<uint32_t>(const std::vector<uint32_t> &actualYValues, const std::vector<int> &predictedClasses);
+    template long double mlLib::LogisticRegressionModel::evaluate<uint64_t>(const std::vector<uint64_t> &actualYValues, const std::vector<int> &predictedClasses);
+
+    template long double mlLib::LogisticRegressionModel::evaluate<float>(const std::vector<float> &actualYValues, const std::vector<int> &predictedClasses);
+    template long double mlLib::LogisticRegressionModel::evaluate<double>(const std::vector<double> &actualYValues, const std::vector<int> &predictedClasses);
+    template long double mlLib::LogisticRegressionModel::evaluate<long double>(const std::vector<long double> &actualYValues, const std::vector<int> &predictedClasses);
+
+    template <typename T>
+    LogisticRegressionModel LogisticRegression(const std::vector<std::vector<T>> &xValues, const std::vector<T> &yValues, const long double learningRate, const int numIterations)
+    {
+        assert(!xValues.empty() && "xValues is empty");
+        assert(!yValues.empty() && "yValues is empty");
+        assert(xValues.size() == yValues.size() && "Input vectors must have the same size");
+
+        size_t numFeatures = xValues[0].size();
+        std::vector<long double> coefficients(numFeatures + 1, 0.0);
+
+        for (int iter = 0; iter < numIterations; ++iter)
+        {
+            std::vector<long double> errors(yValues.size(), 0.0);
+            long double interceptGradient = 0.0;
+
+            for (size_t i = 0; i < xValues.size(); ++i)
+            {
+                long double logit = coefficients[0];
+                for (size_t j = 0; j < numFeatures; ++j)
+                {
+                    logit += coefficients[j + 1] * xValues[i][j];
+                }
+
+                const long double prediction = 1.0 / (1.0 + std::exp(-logit));
+                errors[i] = prediction - yValues[i];
+
+                interceptGradient += errors[i];
+                for (size_t j = 0; j < numFeatures; ++j)
+                {
+                    coefficients[j + 1] -= learningRate * errors[i] * xValues[i][j];
+                }
+            }
+
+            interceptGradient /= yValues.size();
+            coefficients[0] -= learningRate * interceptGradient;
+        }
+
+        return LogisticRegressionModel(coefficients);
+    }
+
+    template LogisticRegressionModel LogisticRegression(const std::vector<std::vector<int8_t>> &xValues, const std::vector<int8_t> &yValues, const long double learningRate, const int numIterations);
+    template LogisticRegressionModel LogisticRegression(const std::vector<std::vector<int16_t>> &xValues, const std::vector<int16_t> &yValues, const long double learningRate, const int numIterations);
+    template LogisticRegressionModel LogisticRegression(const std::vector<std::vector<int32_t>> &xValues, const std::vector<int32_t> &yValues, const long double learningRate, const int numIterations);
+    template LogisticRegressionModel LogisticRegression(const std::vector<std::vector<int64_t>> &xValues, const std::vector<int64_t> &yValues, const long double learningRate, const int numIterations);
+
+    // Explicit instantiations for Logistic Regression with uint types
+    template LogisticRegressionModel LogisticRegression(const std::vector<std::vector<uint8_t>> &xValues, const std::vector<uint8_t> &yValues, const long double learningRate, const int numIterations);
+    template LogisticRegressionModel LogisticRegression(const std::vector<std::vector<uint16_t>> &xValues, const std::vector<uint16_t> &yValues, const long double learningRate, const int numIterations);
+    template LogisticRegressionModel LogisticRegression(const std::vector<std::vector<uint32_t>> &xValues, const std::vector<uint32_t> &yValues, const long double learningRate, const int numIterations);
+    template LogisticRegressionModel LogisticRegression(const std::vector<std::vector<uint64_t>> &xValues, const std::vector<uint64_t> &yValues, const long double learningRate, const int numIterations);
+
+    // Explicit instantiations for Logistic Regression with float types
+    template LogisticRegressionModel LogisticRegression(const std::vector<std::vector<float>> &xValues, const std::vector<float> &yValues, const long double learningRate, const int numIterations);
+    template LogisticRegressionModel LogisticRegression(const std::vector<std::vector<double>> &xValues, const std::vector<double> &yValues, const long double learningRate, const int numIterations);
+    template LogisticRegressionModel LogisticRegression(const std::vector<std::vector<long double>> &xValues, const std::vector<long double> &yValues, const long double learningRate, const int numIterations);
 
 } // namespace mlLib

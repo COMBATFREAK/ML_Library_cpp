@@ -9,6 +9,21 @@
 #include <algorithm>
 #include <cmath>
 
+namespace prob
+{
+
+    double factorial(int n);
+
+    double combinations(int n, int k);
+
+    double permutations(int n, int k);
+
+    double binomialProbability(int n, int k, double p);
+
+    double poissonProbability(int k, double lambda);
+
+} // namespace probability
+
 namespace stat
 {
     // Enumeration for different types of vector normalization
@@ -38,6 +53,7 @@ namespace stat
     // Function to normalize a vector
     template <typename T>
     std::vector<long double> Normalize(const std::vector<T> &vectorA, NormalizationType type);
+
 } // namespace Statistics
 
 namespace vecAlg
@@ -135,6 +151,33 @@ namespace mlLib
 
     template <typename T>
     LinearRegressionModel LinearRegressionGradientDescent(const std::vector<T> &xValues, const std::vector<T> &yValues, stat::NormalizationType normalizationType = stat::NormalizationType::Min_Max, const long double learningRate = 0.01, const int numIterations = 1000);
+
+    class LogisticRegressionModel
+    {
+    private:
+        std::vector<long double> coefficients;
+        stat::NormalizationType normalizationType;
+
+    public:
+        // Constructors
+        LogisticRegressionModel();
+        LogisticRegressionModel(const std::vector<long double> &coefficients);
+
+        // Getter function
+        const std::vector<long double> &getCoefficients() const;
+
+        // Setter function
+        void setCoefficients(const std::vector<long double> &newCoefficients);
+
+        template <typename T>
+        std::vector<int> predict(const std::vector<std::vector<T>> &xValues, const long double threshold = 0.5);
+
+        template <typename T>
+        long double evaluate(const std::vector<T> &actualYValues, const std::vector<int> &predictedClasses);
+    };
+
+    template <typename T>
+    LogisticRegressionModel LogisticRegression(const std::vector<std::vector<T>> &xValues, const std::vector<T> &yValues, const long double learningRate = 0.01, const int numIterations = 1000);
 
 } // namespace mlLib
 
