@@ -80,7 +80,7 @@ int main()
     const long double mse = model.evaluate(yTest, predictedYValues);
 
     // Print the MSE
-    std::cout << "\nLinear Regression Least Squares\n";
+    std::cout << "Linear Regression Least Squares\n";
     std::cout << "Mean Squared Error (MSE) on Test Set: " << mse << std::endl;
 
     // Print model parameters

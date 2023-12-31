@@ -112,10 +112,10 @@ namespace matAlg
     template <typename T>
     std::vector<std::vector<T>> matrixMultiplication(const std::vector<std::vector<T>> &matrixA, const std::vector<std::vector<T>> &matrixB);
 }
-
+// mlLib.h
 namespace mlLib
 {
-
+    // Struct to represent a confusion matrix
     struct ConfusionMatrix
     {
         size_t truePositive = 0;
@@ -124,6 +124,7 @@ namespace mlLib
         size_t falseNegative = 0;
     };
 
+    // Struct to store evaluation metrics
     struct EvaluationMetrics
     {
         long double accuracy = 0;
@@ -132,6 +133,7 @@ namespace mlLib
         long double f1Score = 0;
     };
 
+    // Class for Linear Regression Model
     class LinearRegressionModel
     {
     private:
@@ -154,20 +156,24 @@ namespace mlLib
         void setIntercept(long double newIntercept);
         void setNormalizationType(stat::NormalizationType newNormalizationType);
 
+        // Predict function
         template <typename T>
         std::vector<long double> predict(const std::vector<T> &xVector);
 
+        // Evaluate function
         template <typename T>
         long double evaluate(const std::vector<T> &actualYValues, const std::vector<long double> &predictedYValues);
     };
 
-    // Function to create a linear regression model using input X and Y vectors
+    // Function to create a linear regression model using Least Squares method
     template <typename T>
     LinearRegressionModel LinearRegressionLeastSquares(const std::vector<T> &xValues, const std::vector<T> &yValues, stat::NormalizationType normalizationType = stat::NormalizationType::Min_Max);
 
+    // Function to create a linear regression model using Gradient Descent method
     template <typename T>
     LinearRegressionModel LinearRegressionGradientDescent(const std::vector<T> &xValues, const std::vector<T> &yValues, stat::NormalizationType normalizationType = stat::NormalizationType::Min_Max, const long double learningRate = 0.01, const int numIterations = 1000);
 
+    // Class for Logistic Regression Model
     class LogisticRegressionModel
     {
     private:
@@ -181,27 +187,26 @@ namespace mlLib
         LogisticRegressionModel();
         LogisticRegressionModel(const std::vector<long double> &coefficients);
 
-        // Getter function
+        // Getter functions
         const std::vector<long double> &getCoefficients() const;
-
         ConfusionMatrix getConfusionMatrix() const;
-
         EvaluationMetrics getEvaluationMetrics() const;
 
-        // Setter function
+        // Setter functions
         void setCoefficients(const std::vector<long double> &newCoefficients);
-
         void setConfusionMatrix(const ConfusionMatrix &matrix);
-
         void setEvaluationMetrics(const EvaluationMetrics &metrics);
 
+        // Predict function
         template <typename T>
         std::vector<int> predict(const std::vector<std::vector<T>> &xValues, const long double threshold = 0.5);
 
+        // Evaluate function
         template <typename T>
         long double evaluate(const std::vector<T> &actualYValues, const std::vector<int> &predictedClasses);
     };
 
+    // Function to create a logistic regression model
     template <typename T>
     LogisticRegressionModel LogisticRegression(const std::vector<std::vector<T>> &xValues, const std::vector<T> &yValues, const long double learningRate = 0.01, const int numIterations = 1000);
 

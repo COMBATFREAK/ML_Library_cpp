@@ -20,7 +20,6 @@ std::vector<std::string> split(const std::string &s, char delimiter)
 
 int main()
 {
-
     // Open the CSV file
     std::ifstream file("examples/DataSet/train.csv");
 
@@ -80,7 +79,7 @@ int main()
     const long double mse = model.evaluate(yTest, predictedYValues);
 
     // Print the MSE
-    std::cout << "\nLinear Regression Gradient Descent\n";
+    std::cout << "Linear Regression Gradient Descent\n";
     std::cout << "Mean Squared Error (MSE) on Test Set: " << mse << std::endl;
 
     // Print model parameters
