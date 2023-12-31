@@ -31,8 +31,8 @@ int main()
     }
 
     // Create vectors to store data
-    std::vector<std::vector<double>> xValues;
-    std::vector<double> yValues;
+    std::vector<std::vector<long double>> xValues;
+    std::vector<long double> yValues;
 
     // Read and parse the CSV file
     std::string line;
@@ -47,7 +47,7 @@ int main()
         if (tokens.size() >= 16)
         {
             // Extract values
-            std::vector<double> rowValues;
+            std::vector<long double> rowValues;
             for (int i = 0; i < 15; ++i)
             {
                 rowValues.push_back(std::stod(tokens[i]));
@@ -65,17 +65,17 @@ int main()
     }
 
     const size_t vectorSize = yValues.size();
-    const int trainingSize = static_cast<int>(vectorSize * 0.5);
+    const int trainingSize = static_cast<int>(vectorSize * 0.8);
 
-    std::vector<std::vector<double>> xTrain(xValues.begin(), xValues.begin() + trainingSize);
-    std::vector<std::vector<double>> xTest(xValues.begin() + trainingSize, xValues.end());
+    std::vector<std::vector<long double>> xTrain(xValues.begin(), xValues.begin() + trainingSize);
+    std::vector<std::vector<long double>> xTest(xValues.begin() + trainingSize, xValues.end());
 
-    std::vector<double> yTrain(yValues.begin(), yValues.begin() + trainingSize);
-    std::vector<double> yTest(yValues.begin() + trainingSize, yValues.end());
+    std::vector<long double> yTrain(yValues.begin(), yValues.begin() + trainingSize);
+    std::vector<long double> yTest(yValues.begin() + trainingSize, yValues.end());
 
-    mlLib::LogisticRegressionModel model = mlLib::LogisticRegression(xTrain, yTrain,0.0005,100000);
+    mlLib::LogisticRegressionModel model = mlLib::LogisticRegression(xTrain, yTrain, 0.0005, 10000);
 
-    std::vector<int> predictedYValues = model.predict(xTest,0.9);
+    std::vector<int> predictedYValues = model.predict(xTest);
 
     const long double Accuracy = model.evaluate(yTest, predictedYValues);
 
