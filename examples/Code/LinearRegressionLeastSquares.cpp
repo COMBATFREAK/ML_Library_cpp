@@ -22,7 +22,7 @@ int main()
 {
 
     // Open the CSV file
-    std::ifstream file("examples/DataSet/train.csv");
+    std::ifstream file("examples/DataSet/TaxiFare.csv");
 
     if (!file.is_open())
     {

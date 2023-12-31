@@ -1,4 +1,3 @@
-# ML_Library_cpp
 # Machine Learning Library (mlLib)
 
 ## Overview
@@ -18,6 +17,7 @@ mlLib is a C++ library for machine learning that provides implementations of fun
     - [Logistic Regression](#logistic-regression)
 8. [Usage Examples](#usage-examples)
 9. [Build and Installation](#build-and-installation)
+    - [Compilation Commands](#compilation-commands)
 10. [Contributing](#contributing)
 11. [License](#license)
 
@@ -31,6 +31,9 @@ The library is organized into the following directories:
 
 - **build:** Contains build artifacts.
 - **examples:** Provides usage examples for the library.
+  - **Code:** Contains example codes.
+  - **DataSet:** Holds datasets for linear and logistic regression.
+  - **Exe:** Stores the compiled executables of example codes.
 - **include:** Holds header files (.h) for the library.
 - **lib:** Stores compiled library files.
 - **src:** Contains source code files (.cpp) for the library.
@@ -69,16 +72,29 @@ The `LogisticRegressionModel` class handles logistic regression. It includes fun
 
 ## Usage Examples
 
-The `examples` directory contains sample code snippets demonstrating how to use the library for various functionalities.
+The `examples` directory contains subdirectories:
+
+- **Code:** Contains sample code snippets demonstrating how to use the library for various functionalities.
+- **DataSet:** Holds datasets for linear and logistic regression.
+- **Exe:** Stores the compiled executables of example codes.
 
 ## Build and Installation
 
-Refer to the provided build instructions in the `build` directory for compiling the library and running the examples.
+### Compilation Commands
 
-## Contributing
+Use the following commands to compile the library and example codes:
 
-If you wish to contribute to the development of mlLib, please follow the guidelines outlined in the `CONTRIBUTING.md` file.
+```bash
+# Compile mlLib.cpp source file into an object file
+g++ -c src/mlLib.cpp -o build/mlLib.o
 
-## License
+# Create a static library (archive) containing the mlLib object file
+ar rcs lib/mlLib.a build/mlLib.o
 
-This library is licensed under the MIT License - see the `LICENSE` file for details. Feel free to use, modify, and distribute it in accordance with the terms of the license.
+# Compile examples
+g++ examples/Code/VectorAlgebra.cpp -Iinclude/ -Llib/ -l:mlLib.a -o examples/Exe/t1
+g++ examples/Code/MatrixAlgebra.cpp -Iinclude/ -Llib/ -l:mlLib.a -o examples/Exe/t2
+g++ examples/Code/Probability.cpp -Iinclude/ -Llib/ -l:mlLib.a -o examples/Exe/t3
+g++ examples/Code/LinearRegressionLeastSquares.cpp -Iinclude/ -Llib/ -l:mlLib.a -o examples/Exe/t4
+g++ examples/Code/LinearRegressionGradientDescent.cpp -Iinclude/ -Llib/ -l:mlLib.a -o examples/Exe/t5
+g++ examples/Code/LogisticRegression.cpp -Iinclude/ -Llib/ -l:mlLib.a -o examples/Exe/t6
