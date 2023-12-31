@@ -4,6 +4,14 @@
 
 mlLib is a C++ library for machine learning that provides implementations of fundamental algorithms and utilities for statistical and vector/matrix operations. The library is organized into different namespaces, each focusing on specific areas of machine learning and mathematical operations.
 
+## Tested Environment
+
+The mlLib project has been developed and tested on the following environment:
+
+- **Ubuntu Version:** 23.10
+- **g++ Version:** 13.2.0
+
+
 ## Contents
 
 1. [Introduction](#introduction)
@@ -98,3 +106,4 @@ g++ examples/Code/Probability.cpp -Iinclude/ -Llib/ -l:mlLib.a -o examples/Exe/t
 g++ examples/Code/LinearRegressionLeastSquares.cpp -Iinclude/ -Llib/ -l:mlLib.a -o examples/Exe/t4
 g++ examples/Code/LinearRegressionGradientDescent.cpp -Iinclude/ -Llib/ -l:mlLib.a -o examples/Exe/t5
 g++ examples/Code/LogisticRegression.cpp -Iinclude/ -Llib/ -l:mlLib.a -o examples/Exe/t6
+
