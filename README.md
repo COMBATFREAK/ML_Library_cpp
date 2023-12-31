@@ -78,11 +78,16 @@ The `LogisticRegressionModel` class handles logistic regression. It includes fun
 
 ## Usage Examples
 
+## Usage Examples
+
 The `examples` directory contains subdirectories:
 
 - **Code:** Contains sample code snippets demonstrating how to use the library for various functionalities.
 - **DataSet:** Holds datasets for linear and logistic regression.
+  - **TaxiFare.csv:** Dataset for linear regression. Credits to [@misc{nagendra.s_ravi shankar.b_2023}](https://www.kaggle.com/dsv/7210622) for the Taxi Trip Fare Prediction dataset.
+  - **HeartDisease.csv:** Dataset for logistic regression. Credits to [Kaggle](https://www.kaggle.com/datasets/dileep070/heart-disease-prediction-using-logistic-regression) for the Heart Disease Prediction dataset.
 - **Exe:** Stores the compiled executables of example codes.
+
 
 ## Build and Installation
 
