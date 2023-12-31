@@ -26,8 +26,6 @@ The mlLib project has been developed and tested on the following environment:
 8. [Usage Examples](#usage-examples)
 9. [Build and Installation](#build-and-installation)
     - [Compilation Commands](#compilation-commands)
-10. [Contributing](#contributing)
-11. [License](#license)
 
 ## Introduction
 
