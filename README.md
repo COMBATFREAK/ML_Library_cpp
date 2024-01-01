@@ -78,8 +78,6 @@ The `LogisticRegressionModel` class handles logistic regression. It includes fun
 
 ## Usage Examples
 
-## Usage Examples
-
 The `examples` directory contains subdirectories:
 
 - **Code:** Contains sample code snippets demonstrating how to use the library for various functionalities.
