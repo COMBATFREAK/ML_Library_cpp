@@ -85,6 +85,10 @@ The `examples` directory contains subdirectories:
   - **TaxiFare.csv:** Dataset for linear regression. Credits to [@misc{nagendra.s_ravi shankar.b_2023}](https://www.kaggle.com/dsv/7210622) for the Taxi Trip Fare Prediction dataset.
   - **HeartDisease.csv:** Dataset for logistic regression. Credits to [Kaggle](https://www.kaggle.com/datasets/dileep070/heart-disease-prediction-using-logistic-regression) for the Heart Disease Prediction dataset.
 - **Exe:** Stores the compiled executables of example codes.
+- **Models:** Contains the saved models of ML models.
+  - **LinRegLeastSqModel.txt:** Saved model for linear regression using least squares.
+  - **LinRegGradDesModel.txt:** Saved model for linear regression using gradient descent.
+  - **LogRegModel.txt:** Saved model for logistic regression.
 
 
 ## Build and Installation
