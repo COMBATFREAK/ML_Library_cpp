@@ -2,6 +2,7 @@
 #define ML_LIB_H
 
 #include <iostream>
+#include <fstream>
 #include <vector>
 #include <cassert>
 #include <cstdint>
@@ -133,6 +134,39 @@ namespace mlLib
         long double f1Score = 0;
     };
 
+    inline std::ostream &operator<<(std::ostream &os, const ConfusionMatrix &obj)
+    {
+        os << obj.truePositive << " "
+           << obj.trueNegative << " "
+           << obj.falsePositive << " "
+           << obj.falseNegative << " ";
+        return os;
+    }
+
+    // Deserialization function for ConfusionMatrix
+    inline std::istream &operator>>(std::istream &is, ConfusionMatrix &obj)
+    {
+        is >> obj.truePositive >> obj.trueNegative >> obj.falsePositive >> obj.falseNegative;
+        return is;
+    }
+
+    // Serialization function for EvaluationMetrics
+    inline std::ostream &operator<<(std::ostream &os, const EvaluationMetrics &obj)
+    {
+        os << obj.accuracy << " "
+           << obj.recall << " "
+           << obj.precision << " "
+           << obj.f1Score << " ";
+        return os;
+    }
+
+    // Deserialization function for EvaluationMetrics
+    inline std::istream &operator>>(std::istream &is, EvaluationMetrics &obj)
+    {
+        is >> obj.accuracy >> obj.recall >> obj.precision >> obj.f1Score;
+        return is;
+    }
+
     // Class for Linear Regression Model
     class LinearRegressionModel
     {
@@ -163,6 +197,27 @@ namespace mlLib
         // Evaluate function
         template <typename T>
         long double evaluate(const std::vector<T> &actualYValues, const std::vector<long double> &predictedYValues);
+
+        void saveToFile(const std::string &filename);
+        void loadFromFile(const std::string &filename);
+
+        // Serialization function
+        friend std::ostream &operator<<(std::ostream &os, const LinearRegressionModel &obj)
+        {
+            os << obj.slope << " " << obj.intercept << " " << static_cast<int>(obj.normalizationType);
+            return os;
+        }
+
+        // Deserialization function
+        friend std::istream &operator>>(std::istream &is, LinearRegressionModel &obj)
+        {
+            int normalizationTypeInt;
+            is >> obj.slope >> obj.intercept >> normalizationTypeInt;
+            obj.normalizationType = static_cast<stat::NormalizationType>(normalizationTypeInt);
+            return is;
+        }
+
+        void printInfo() const;
     };
 
     // Function to create a linear regression model using Least Squares method
@@ -204,6 +259,61 @@ namespace mlLib
         // Evaluate function
         template <typename T>
         long double evaluate(const std::vector<T> &actualYValues, const std::vector<int> &predictedClasses);
+
+        // Save the object to a file
+        void saveToFile(const std::string &filename) const;
+
+        // Load the object from a file
+        void loadFromFile(const std::string &filename);
+
+        friend std::ostream &operator<<(std::ostream &os, const LogisticRegressionModel &obj)
+        {
+            // Serialize coefficients
+            os << obj.coefficients.size() << " ";
+            for (const auto &coef : obj.coefficients)
+            {
+                os << coef << " ";
+            }
+
+            // Serialize other members
+            os << static_cast<int>(obj.normalizationType) << " ";
+
+            // Serialize ConfusionMatrix
+            os << obj.confusionMatrix;
+
+            // Serialize EvaluationMetrics
+            os << obj.evaluationMetrics;
+
+            return os;
+        }
+
+        // Definition of the deserialization function
+        friend std::istream &operator>>(std::istream &is, LogisticRegressionModel &obj)
+        {
+            // Deserialize coefficients
+            size_t coefSize;
+            is >> coefSize;
+            obj.coefficients.resize(coefSize);
+            for (size_t i = 0; i < coefSize; ++i)
+            {
+                is >> obj.coefficients[i];
+            }
+
+            // Deserialize other members
+            int normalizationTypeInt;
+            is >> normalizationTypeInt;
+            obj.normalizationType = static_cast<stat::NormalizationType>(normalizationTypeInt);
+
+            // Deserialize ConfusionMatrix
+            is >> obj.confusionMatrix;
+
+            // Deserialize EvaluationMetrics
+            is >> obj.evaluationMetrics;
+
+            return is;
+        }
+
+        void printInfo() const;
     };
 
     // Function to create a logistic regression model

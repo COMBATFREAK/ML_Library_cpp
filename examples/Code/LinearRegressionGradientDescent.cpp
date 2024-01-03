@@ -87,6 +87,8 @@ int main()
     std::cout << "Slope: " << model.getSlope() << std::endl;
     std::cout << "Intercept: " << model.getIntercept() << std::endl;
 
+    model.saveToFile("examples/Models/LinRegGradDesModel.txt");
+
     // Close the file
     file.close();
 

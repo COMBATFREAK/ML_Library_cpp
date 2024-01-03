@@ -14,3 +14,4 @@ g++ examples/Code/Probability.cpp -Iinclude/ -Llib/ -l:mlLib.a -o examples/Exe/t
 g++ examples/Code/LinearRegressionLeastSquares.cpp -Iinclude/ -Llib/ -l:mlLib.a -o examples/Exe/t4
 g++ examples/Code/LinearRegressionGradientDescent.cpp -Iinclude/ -Llib/ -l:mlLib.a -o examples/Exe/t5
 g++ examples/Code/LogisticRegression.cpp -Iinclude/ -Llib/ -l:mlLib.a -o examples/Exe/t6
+g++ examples/Code/LoadModel.cpp -Iinclude/ -Llib/ -l:mlLib.a -o examples/Exe/t7

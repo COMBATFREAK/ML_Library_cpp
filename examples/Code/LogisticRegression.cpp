@@ -98,6 +98,8 @@ int main()
     std::cout << std::setw(15) << "Precision: " << evaluationMetrics.precision << "%\n";
     std::cout << std::setw(15) << "F1 Score: " << evaluationMetrics.f1Score << "\n";
 
+    model.saveToFile("examples/Models/LogRegModel.txt");
+
     // Close the file
     file.close();
     return 0;

@@ -612,6 +612,8 @@ namespace matAlg
 
 namespace mlLib
 {
+    LinearRegressionModel::LinearRegressionModel(){};
+
     LinearRegressionModel::LinearRegressionModel(long double slope, long double intercept, stat::NormalizationType normalizationType)
         : slope(slope), intercept(intercept), normalizationType(normalizationType) {}
 
@@ -693,6 +695,34 @@ namespace mlLib
     template long double LinearRegressionModel::evaluate(const std::vector<double> &actualYValues, const std::vector<long double> &predictedYValues);
     template long double LinearRegressionModel::evaluate(const std::vector<long double> &actualYValues, const std::vector<long double> &predictedYValues);
 
+    void LinearRegressionModel::saveToFile(const std::string &filename)
+    {
+        std::ofstream outFile(filename);
+        if (outFile.is_open())
+        {
+            outFile << *this;
+            outFile.close();
+        }
+        else
+        {
+            std::cerr << "Unable to open file for writing." << std::endl;
+        }
+    }
+
+    void LinearRegressionModel::loadFromFile(const std::string &filename)
+    {
+        std::ifstream inFile(filename);
+        if (inFile.is_open())
+        {
+            inFile >> *this;
+            inFile.close();
+        }
+        else
+        {
+            std::cerr << "Unable to open file for reading." << std::endl;
+        }
+    }
+
     template <typename T>
     LinearRegressionModel LinearRegressionLeastSquares(const std::vector<T> &xValues, const std::vector<T> &yValues, stat::NormalizationType normalizationType)
     {
@@ -714,6 +744,14 @@ namespace mlLib
         long double intercept = (sumY - slope * sumX) / size;
 
         return LinearRegressionModel(slope, intercept, normalizationType);
+    }
+
+    void LinearRegressionModel::printInfo() const
+    {
+        std::cout << "Linear Regression Model:\n"
+                  << "Slope: " << slope << "\n"
+                  << "Intercept: " << intercept << "\n"
+                  << "Normalization Type: " << normalizationType << "\n";
     }
 
     template LinearRegressionModel LinearRegressionLeastSquares(const std::vector<int8_t> &xValues, const std::vector<int8_t> &yValues, stat::NormalizationType normalizationType);
@@ -898,6 +936,54 @@ namespace mlLib
     template long double mlLib::LogisticRegressionModel::evaluate<float>(const std::vector<float> &actualYValues, const std::vector<int> &predictedClasses);
     template long double mlLib::LogisticRegressionModel::evaluate<double>(const std::vector<double> &actualYValues, const std::vector<int> &predictedClasses);
     template long double mlLib::LogisticRegressionModel::evaluate<long double>(const std::vector<long double> &actualYValues, const std::vector<int> &predictedClasses);
+
+    void LogisticRegressionModel::saveToFile(const std::string &filename) const
+    {
+        std::ofstream outFile(filename);
+        if (outFile.is_open())
+        {
+            outFile << *this;
+            outFile.close();
+        }
+        else
+        {
+            std::cerr << "Unable to open file for writing." << std::endl;
+        }
+    }
+
+    // Definition of the member function loadFromFile
+    void LogisticRegressionModel::loadFromFile(const std::string &filename)
+    {
+        std::ifstream inFile(filename);
+        if (inFile.is_open())
+        {
+            inFile >> *this;
+            inFile.close();
+        }
+        else
+        {
+            std::cerr << "Unable to open file for reading." << std::endl;
+        }
+    }
+
+    void LogisticRegressionModel::printInfo() const
+    {
+        std::cout << "Logistic Regression Model:\n"
+                  << "Coefficients: ";
+        for (const auto &coeff : coefficients)
+        {
+            std::cout << coeff << " ";
+        }
+        std::cout << "\nNormalization Type: " << normalizationType << "\n"
+                  << "Confusion Matrix: TP=" << confusionMatrix.truePositive
+                  << ", TN=" << confusionMatrix.trueNegative
+                  << ", FP=" << confusionMatrix.falsePositive
+                  << ", FN=" << confusionMatrix.falseNegative << "\n"
+                  << "Evaluation Metrics: Accuracy=" << evaluationMetrics.accuracy
+                  << ", Recall=" << evaluationMetrics.recall
+                  << ", Precision=" << evaluationMetrics.precision
+                  << ", F1 Score=" << evaluationMetrics.f1Score << "\n";
+    }
 
     template <typename T>
     LogisticRegressionModel LogisticRegression(const std::vector<std::vector<T>> &xValues, const std::vector<T> &yValues, const long double learningRate, const int numIterations)
